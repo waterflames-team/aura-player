@@ -1,4 +1,4 @@
-package com.auraplayer
+package com.waterflames.auraplayer
 
 import android.app.Application
 import com.facebook.react.PackageList

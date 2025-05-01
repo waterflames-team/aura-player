@@ -1,4 +1,4 @@
-package com.auraplayer
+package com.waterflames.auraplayer
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
