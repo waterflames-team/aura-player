@@ -38,7 +38,27 @@ yarn android
 2. 替换android/app/src/main/res/目录下对应mipmap文件夹中的ic_launcher.png文件
 建议使用工具自动生成多尺寸图标：
 
-```sh
-npm install -g yo generator-rn-toolbox
-yo rn-toolbox:assets --icon < 你的图标路径 >
+打包篇
+
+1. 首先需要配置Android签名密钥：
+```bash
+keytool -genkeypair -v -keystore my-release-key.keystore -alias my-key-alias -keyalg RSA -keysize 2048 -validity 10000
 ```
+2. 移动密钥文件到Android目录：
+```bash
+mv my-release-key.keystore android/app/
+```
+
+3. 配置gradle.properties文件：
+```bash
+echo "MYAPP_RELEASE_STORE_FILE=my-release-key.keystore" >> android/gradle.properties
+echo "MYAPP_RELEASE_KEY_ALIAS=my-key-alias" >> android/gradle.properties
+echo "MYAPP_RELEASE_STORE_PASSWORD=您设置的密码" >> android/gradle.properties
+echo "MYAPP_RELEASE_KEY_PASSWORD=您设置的密码" >> android/gradle.properties
+```
+4. 运行打包命令：
+```bash
+cd android
+./gradlew assembleRelease
+```
+5. 生成的APK文件位于`android/app/build/outputs/apk/release`目录下。

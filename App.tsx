@@ -1,25 +1,32 @@
 /**
  * Aura Player App
- * 准备重写的应用入口文件
+ * 应用入口文件
  */
 
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import PlayerController from './components/PlayerController';
 
 function App(): React.JSX.Element {
   return (
-    <View style={styles.container}>
-      {/* 按钮将在这里添加 */}
+    <View style={styles.player}>
+      <PlayerController />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
+  player: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 20
+    padding: 0,
+    backgroundColor: '#191919'
   }
 });
 
