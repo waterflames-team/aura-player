@@ -6,10 +6,38 @@
 import * as DocumentPicker from "expo-document-picker";
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import AudioPlay, { AudioPlayRef } from "./components/AudioPlay";
 import PlayerController from "./components/PlayerController";
 
 function App(): React.JSX.Element {
   const [selectedFile, setSelectedFile] = React.useState<string>("");
+  const audioPlayRef = React.useRef<AudioPlayRef>(null);
+
+  /**
+   * 选择音频文件并播放
+   * @returns Promise<void>
+   */
+  async function selectAndPlayAudio(): Promise<void> {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: "audio/*",
+        copyToCacheDirectory: false,
+      });
+      if (result.assets) {
+        setSelectedFile(result.assets[0].uri);
+        // audioPlayRef.current?.updateAudioUri(result.assets[0].uri);
+        audioPlayRef.current?.updateAudioUri("/document/primary%3AYulimfish%2F%E9%87%8F%E5%8F%98%2F10%E5%8D%8E%E6%99%A8%E5%AE%87%20-%20%E6%99%A8%E5%85%89%E9%87%8C%E6%9C%89%E4%BD%A0.flac");
+        console.log("选择的音频文件路径:", result.assets[0].uri);
+      }
+    } catch (err) {
+      console.error("选择文件出错:", err);
+    }
+  }
+
+  function getSelectedFile(): string {
+    return "/document/primary%3AYulimfish%2F%E9%87%8F%E5%8F%98%2F10%E5%8D%8E%E6%99%A8%E5%AE%87%20-%20%E6%99%A8%E5%85%89%E9%87%8C%E6%9C%89%E4%BD%A0.flac";
+    // return selectedFile;
+  }
 
   return (
     <View style={styles.player}>
@@ -22,20 +50,7 @@ function App(): React.JSX.Element {
           backgroundColor: "#000",
           borderRadius: 5,
         }}
-        onPress={async () => {
-          try {
-            const result = await DocumentPicker.getDocumentAsync({
-              type: "audio/*",
-              copyToCacheDirectory: false,
-            });
-            if (result.assets) {
-              setSelectedFile(result.assets[0].uri);
-              console.log("选择的音频文件路径:", result.assets[0].uri);
-            }
-          } catch (err) {
-            console.error("选择文件出错:", err);
-          }
-        }}
+        onPress={selectAndPlayAudio}
       >
         <Text style={{ color: "#fff" }}>选择音频文件</Text>
       </TouchableOpacity>
@@ -56,6 +71,7 @@ function App(): React.JSX.Element {
       ) : null}
 
       <PlayerController />
+      <AudioPlay ref={audioPlayRef} audioUri={getSelectedFile()} />
     </View>
   );
 }
