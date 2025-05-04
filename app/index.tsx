@@ -3,14 +3,13 @@
  * 应用入口文件
  */
 
-import { Audio } from "expo-av";
 import * as DocumentPicker from "expo-document-picker";
-import React, { useState } from "react";
+import React from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import PlayerController from "./components/PlayerController";
 
 function App(): React.JSX.Element {
-  const [selectedFile, setSelectedFile] = useState<string>("");
+  const [selectedFile, setSelectedFile] = React.useState<string>("");
 
   return (
     <View style={styles.player}>
@@ -29,28 +28,34 @@ function App(): React.JSX.Element {
               type: "audio/*",
               copyToCacheDirectory: false,
             });
-            if (!result.canceled) {
-              console.log("Selected audio file:", result.assets[0].uri);
+            if (result.assets) {
               setSelectedFile(result.assets[0].uri);
-
-              // 播放选中的音频文件喵～
-              const { sound } = await Audio.Sound.createAsync(
-                { uri: result.assets[0].uri },
-                { shouldPlay: true }
-              );
-              await sound.playAsync();
+              console.log("选择的音频文件路径:", result.assets[0].uri);
             }
           } catch (err) {
-            console.error("Error picking document:", err);
+            console.error("选择文件出错:", err);
           }
         }}
       >
-        <Text style={{ color: "#fff" }}>click</Text>
+        <Text style={{ color: "#fff" }}>选择音频文件</Text>
       </TouchableOpacity>
-      <PlayerController />
+
       {selectedFile ? (
-        <Text style={styles.filePath}>{selectedFile}</Text>
+        <Text
+          style={{
+            position: "absolute",
+            top: 70,
+            left: 20,
+            right: 20,
+            color: "#fff",
+            fontSize: 12,
+          }}
+        >
+          已选择: {selectedFile}
+        </Text>
       ) : null}
+
+      <PlayerController />
     </View>
   );
 }
@@ -67,15 +72,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 0,
     backgroundColor: "#191919",
-  },
-  filePath: {
-    position: "absolute",
-    bottom: 20,
-    color: "#fff",
-    padding: 10,
-    backgroundColor: "rgba(0,0,0,0.5)",
-    borderRadius: 5,
-    maxWidth: "80%",
   },
 });
 
